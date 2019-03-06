@@ -1,0 +1,45 @@
+# Adopt version 2 syntax:
+#   https://docs.docker.com/compose/compose-file/#/versioning
+version: '2'
+
+volumes:
+  database_data:
+    driver: local
+
+services:
+  ###########################
+  # Setup the Nginx container
+  ###########################
+  nginx:
+    image: nginx:latest
+    ports:
+      - 2803:80
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    volumes_from:
+      - php
+
+  ###########################
+  # Setup the PHP container
+  ###########################
+  php:
+    build: ./docker/php/
+    expose:
+      - 9000
+    volumes:
+      - .:/var/www/auth
+
+  ###########################
+  # Setup the Database (MySQL) container
+  ###########################
+#  mysql:
+#    image: mysql:latest
+#    ports:
+#      - 6603:3306
+#    volumes:
+#      - database_data:/var/lib/mysql
+#    environment:
+#      MYSQL_ROOT_PASSWORD: secret
+#      MYSQL_DATABASE: web_services
+#      MYSQL_USER: root
+#      MYSQL_PASSWORD: root

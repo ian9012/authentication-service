@@ -21,4 +21,5 @@ use Zend\Expressive\MiddlewareFactory;
  */
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
     $app->get('/ping', \Ping\Action\PingAction::class, 'ping');
+    $app->post('/authenticate', \Authentication\Action\AuthenticationAction::class, 'authenticate');
 };

@@ -13,6 +13,6 @@ class PingAction implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        return new JsonResponse('Today is '.date('d-M-Y'),200);
+        return new JsonResponse('Today is '.date('d-M-Y'), 200);
     }
 }
