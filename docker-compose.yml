@@ -12,6 +12,7 @@ services:
   ###########################
   nginx:
     image: nginx:latest
+    working_dir: /etc/nginx
     ports:
       - 2803:80
     volumes:
@@ -24,6 +25,7 @@ services:
   ###########################
   php:
     build: ./docker/php/
+    working_dir: /var/www/auth
     expose:
       - 9000
     volumes:
