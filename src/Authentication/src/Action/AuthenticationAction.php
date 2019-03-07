@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Authentication\Action;
 
 use Account\Repositories\AccountRepository;
+use Authentication\Service\JwtService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -16,12 +17,26 @@ class AuthenticationAction implements RequestHandlerInterface
      * @var AccountRepository
      */
     private $repository;
+    /**
+     * @var JwtService
+     */
+    private $service;
 
-    public function __construct(AccountRepository $repository)
+    /**
+     * AuthenticationAction constructor.
+     * @param AccountRepository $repository
+     * @param JwtService $service
+     */
+    public function __construct(AccountRepository $repository, JwtService $service)
     {
         $this->repository = $repository;
+        $this->service = $service;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         try {
@@ -29,8 +44,14 @@ class AuthenticationAction implements RequestHandlerInterface
 
             $this->validate($payload);
 
-            if ($this->repository->getByEmailAndPassword($payload['email'], $payload['password'])) {
-                return new JsonResponse(['status' => 'Valid Account'], 200);
+            $account = $this->repository->getByEmailAndPassword($payload['email'], $payload['password']);
+
+            if (!empty($account->getId())) {
+                return new JsonResponse([
+                                            'email' => $account->getEmail(),
+                                            'access_token' => $this->service->getToken($account),
+                                            'status' => 'Valid Account'
+                                        ], 200);
             }
             return new JsonResponse(['status' => 'Invalid Account'], 400);
         } catch (\Exception $exception) {

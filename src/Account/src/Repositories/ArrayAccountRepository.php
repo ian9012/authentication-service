@@ -3,10 +3,14 @@
 namespace Account\Repositories;
 
 use Account\Account;
+use Zend\Hydrator\AbstractHydrator;
 use Zend\Hydrator\ClassMethodsHydrator;
 
 class ArrayAccountRepository implements AccountRepository
 {
+    /**
+     * @var AbstractHydrator
+     */
     private $hydrator;
     private $accounts = [];
 
@@ -18,19 +22,21 @@ class ArrayAccountRepository implements AccountRepository
         }
     }
 
-    public function getByEmailAndPassword(string $email, string $password): bool
+    /**
+     * @param string $email
+     * @param string $password
+     * @return Account
+     */
+    public function getByEmailAndPassword(string $email, string $password): Account
     {
+        $account = new Account();
         for ($i = 0; $i < count($this->accounts); $i++) {
-
-            /**
-             * @var $account Account
-             */
-            $account = $this->accounts[$i];
-            if ($this->isAccountFound($email, $password, $account)) {
-                return true;
+            if ($this->isAccountFound($email, $password, $this->accounts[$i])) {
+                $account = $this->accounts[$i];
+                break;
             }
         }
-        return false;
+        return $account;
     }
 
     private function mockStorage()

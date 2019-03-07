@@ -2,7 +2,9 @@
 
 namespace Account\Repositories;
 
+use Account\Account;
+
 interface AccountRepository
 {
-    public function getByEmailAndPassword(string $email, string $password): bool;
+    public function getByEmailAndPassword(string $email, string $password): Account;
 }
