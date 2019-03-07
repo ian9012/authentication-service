@@ -2,6 +2,6 @@ actor: ApiTester
 modules:
     enabled:
         - REST:
-              url: http://192.168.1.36:2803/
+              url: http://192.168.0.194:2803/
               depends: PhpBrowser
               part: Json
