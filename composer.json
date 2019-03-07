@@ -38,6 +38,7 @@
     },
     "require": {
         "php": "^7.1",
+        "dephpend/dephpend": "dev-master",
         "firebase/php-jwt": "^5.0",
         "zendframework/zend-component-installer": "^2.1.1",
         "zendframework/zend-config-aggregator": "^1.0",
@@ -54,6 +55,7 @@
         "codeception/c3": "2.*",
         "codeception/codeception": "^2.5",
         "filp/whoops": "^2.1.12",
+        "phploc/phploc": "^4.0",
         "phpunit/phpunit": "^7.0.1",
         "roave/security-advisories": "dev-master",
         "squizlabs/php_codesniffer": "^2.9.1",
