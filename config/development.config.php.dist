@@ -12,7 +12,7 @@
  * DO NOT MODIFY THIS FILE.
  *
  * Provide your own development-mode settings by editing the file
- * `config/autoload/development.local.php.dist`.
+ * `config/autoload/development.local.php`.
  *
  * Because this file is aggregated last, it simply ensures:
  *
