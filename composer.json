@@ -50,14 +50,15 @@
         "zendframework/zend-stdlib": "^3.1"
     },
     "require-dev": {
+        "bmitch/churn-php": "^1.0",
+        "codeception/c3": "2.*",
         "codeception/codeception": "^2.5",
         "filp/whoops": "^2.1.12",
         "phpunit/phpunit": "^7.0.1",
         "roave/security-advisories": "dev-master",
         "squizlabs/php_codesniffer": "^2.9.1",
         "zendframework/zend-expressive-tooling": "^1.0",
-        "zfcampus/zf-development-mode": "^3.1",
-        "codeception/c3": "2.*"
+        "zfcampus/zf-development-mode": "^3.1"
     },
     "autoload": {
         "psr-4": {
