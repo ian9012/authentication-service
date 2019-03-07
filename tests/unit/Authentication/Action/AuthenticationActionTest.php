@@ -1,6 +1,8 @@
 <?php namespace Authentication\Action;
 
+use Account\Account;
 use Account\Repositories\ArrayAccountRepository;
+use Authentication\Service\JwtService;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\ServerRequest;
@@ -12,9 +14,16 @@ class AuthenticationActionTest extends \Codeception\Test\Unit
      */
     private $action;
 
-    protected function setUp()
+    protected function init($email, $password, Account $account)
     {
-        $this->action = new AuthenticationAction(new ArrayAccountRepository());
+        $service = $this->prophesize(JwtService::class);
+        $service->getToken($account)->willReturn('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.
+        eyJpc3MiOiJodHRwOlwvXC9hcGkuYXV0aC5sb2NhbCIsImF1ZCI6Imh0dHA6XC9cL2FwaS5hdXRo
+        LmxvY2FsIiwiaWF0IjoxMzU2OTk5NTI0LCJuYmYiOjEzNTcwMDAwMDAsImRhdGEiOnsiaWQiOjEsI
+        mVtYWlsIjoiaWFuY2hhcmxlczkwMTIyM0BnbWFpbC5jb20ifX0.6ZQbAzJsO2k251uKBRIwgW6BUDJ1i2vrSa06sBw2eKM');
+        $repository = $this->prophesize(ArrayAccountRepository::class);
+        $repository->getByEmailAndPassword($email, $password)->willReturn($account);
+        $this->action = new AuthenticationAction($repository->reveal(), $service->reveal());
     }
 
     /**
@@ -26,6 +35,12 @@ class AuthenticationActionTest extends \Codeception\Test\Unit
             'email' => 'iancharles901223@gmail.com',
             'password' => '123456',
         ];
+
+        $account = new Account();
+        $account->setId((rand(0, 100) + 1));
+        $account->setEmail($credentials['email']);
+        $account->setPassword($credentials['password']);
+        $this->init($credentials['email'], $credentials['password'], $account);
         $response = $this->action->handle($this->getServerRequest($credentials));
         $this->assertTrue($response instanceof JsonResponse);
         $this->assertEquals(200, $response->getStatusCode());
@@ -40,6 +55,7 @@ class AuthenticationActionTest extends \Codeception\Test\Unit
             'email' => 'iancharles901223@gmail.com',
             'password' => 'awing2801',
         ];
+        $this->init($credentials['email'], $credentials['password'], new Account());
         $response = $this->action->handle($this->getServerRequest($credentials));
         $this->assertTrue($response instanceof JsonResponse);
         $this->assertEquals(400, $response->getStatusCode());
@@ -54,6 +70,7 @@ class AuthenticationActionTest extends \Codeception\Test\Unit
             'email' => '',
             'password' => '',
         ];
+        $this->init($credentials['email'], $credentials['password'], new Account());
         $response = $this->action->handle($this->getServerRequest($credentials));
         $this->assertTrue($response instanceof JsonResponse);
         $this->assertEquals(400, $response->getStatusCode());
@@ -69,6 +86,7 @@ class AuthenticationActionTest extends \Codeception\Test\Unit
             'email' => '',
             'password' => 'awing2801',
         ];
+        $this->init($credentials['email'], $credentials['password'], new Account());
         $response = $this->action->handle($this->getServerRequest($credentials));
         $this->assertTrue($response instanceof JsonResponse);
         $this->assertEquals(400, $response->getStatusCode());
@@ -83,6 +101,7 @@ class AuthenticationActionTest extends \Codeception\Test\Unit
         $credentials = [
             'password' => 'awing2801',
         ];
+        $this->init(null, $credentials['password'], new Account());
         $response = $this->action->handle($this->getServerRequest($credentials));
         $this->assertTrue($response instanceof JsonResponse);
         $this->assertEquals(400, $response->getStatusCode());
@@ -98,6 +117,7 @@ class AuthenticationActionTest extends \Codeception\Test\Unit
             'email' => 'iancharles901223@gmail.com',
             'password' => '',
         ];
+        $this->init($credentials['email'], $credentials['password'], new Account());
         $response = $this->action->handle($this->getServerRequest($credentials));
         $this->assertTrue($response instanceof JsonResponse);
         $this->assertEquals(400, $response->getStatusCode());
@@ -112,6 +132,7 @@ class AuthenticationActionTest extends \Codeception\Test\Unit
         $credentials = [
             'email' => 'iancharles901223@gmail.com',
         ];
+        $this->init($credentials['email'], null, new Account());
         $response = $this->action->handle($this->getServerRequest($credentials));
         $this->assertTrue($response instanceof JsonResponse);
         $this->assertEquals(400, $response->getStatusCode());
@@ -127,6 +148,7 @@ class AuthenticationActionTest extends \Codeception\Test\Unit
             'email' => 'iancharles901223@',
             'password' => 'awing2801',
         ];
+        $this->init($credentials['email'], $credentials['password'], new Account());
         $response = $this->action->handle($this->getServerRequest($credentials));
         $this->assertTrue($response instanceof JsonResponse);
         $this->assertEquals(400, $response->getStatusCode());

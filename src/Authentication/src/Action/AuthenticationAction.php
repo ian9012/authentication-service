@@ -46,7 +46,7 @@ class AuthenticationAction implements RequestHandlerInterface
 
             $account = $this->repository->getByEmailAndPassword($payload['email'], $payload['password']);
 
-            if (!empty($account->getId())) {
+            if ($account->getId()) {
                 return new JsonResponse([
                                             'email' => $account->getEmail(),
                                             'access_token' => $this->service->getToken($account),
