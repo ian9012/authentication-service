@@ -16,4 +16,6 @@ coverage:
     exclude:
         - src/Authentication/src/ConfigProvider.php
         - src/Ping/src/ConfigProvider.php
+    low_limit: 30
+    high_limit: 80
 
