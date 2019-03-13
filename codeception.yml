@@ -13,3 +13,7 @@ coverage:
     remote: true
     include:
         - src/*
+    exclude:
+        - src/Authentication/src/ConfigProvider.php
+        - src/Ping/src/ConfigProvider.php
+
